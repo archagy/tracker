@@ -1,4 +1,4 @@
-class API::ClientsController < API::BaseController
+class API::V1::ClientsController < API::BaseController
 	respond_to :json
 	before_action :check_owner, only: [:show, :update, :destroy]
 
