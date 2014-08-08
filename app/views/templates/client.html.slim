@@ -1,0 +1,37 @@
+.ng-cloak(ng-init="init()")
+  .sort-links        
+    p.text-muted
+      ' &nbsp;
+      span(ng-show="sortMethod == dueDateNullLast")
+        ' Note: Rearranging reminders is disabled when sorting by due date.
+    p
+      ' sort by:
+      a(href="" ng-class="{active: sortMethod == 'priority'}" ng-click="changeSortMethod('priority')")
+        ' priority
+      ' |
+      a(href="" ng-class="{active: sortMethod == dueDateNullLast}" ng-click="changeSortMethod(dueDateNullLast)")
+        ' due date
+  div.panel.panel-info.task-list
+    div.panel-heading     
+      editablespan(model="client.name" on-ready="clientNameEdited(client.name)" input-class="form-control" span-class="client-name")
+
+    form#new_reminder(ng-submit="addReminder()")
+      .input-group
+        input#reminderDescription.form-control.input-lg(type="text" autofocus="autofocus" placeholder="Reminder description" maxlength="255" ng-model="reminderDescription" data-non-blank)
+        span.input-group-btn
+          button.btn.btn-primary.btn-lg(type="submit") add
+    ul.list-group(ui-sortable="sortableOptions" ng-model="client.reminders" ui-sortable-ext="sortableEnabled")
+      li.list-group-item(ng-repeat="reminder in client.reminders | orderBy:sortMethod" ng-class="{completed: reminder.completed, draggable: sortMethod == 'priority'}")
+        .task-completed
+          input(type="checkbox" ng-model="reminder.completed" ng-change="toggleReminder(reminder)")
+        .task-description
+          editablespan(model="reminder.description" on-ready="reminderEdited(reminder)" input-class="form-control")
+        .task-buttons.pull-right
+          button.btn.btn-danger.btn-xs.pull-right(type="button" ng-click="deleteReminder(reminder)")
+            span.glyphicon.glyphicon-ban-circle
+          calendar(model="reminder.date" on-change="dueDatePicked(reminder)")
+            button.btn.btn-info.btn-xs.pull-right(type="button")
+              span.glyphicon.glyphicon-time
+        .task-due-date(ng-show="reminder.date")
+          small
+            ' Due date: {{reminder.date}}  

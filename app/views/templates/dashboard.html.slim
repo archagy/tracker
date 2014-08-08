@@ -1,0 +1,23 @@
+.ng-cloak(ng-init="init()")
+
+  div.panel.panel-default.dashboard-list
+    div.panel-heading 
+      h4 Your clients
+    ul.list-group(ng-show="clients == 0")
+      li.list-group-item
+        ' You haven't created any client yet.      
+    ul.list-group
+      li.list-group-item(ng-repeat="client in clients")
+        button.btn.btn-danger.btn-xs.pull-right(type="button" ng-click="deleteClient(client, $index)")
+          span.glyphicon.glyphicon-ban-circle 
+        p
+          a(ng-href="/clients/{{client.id}}")   
+            ' {{client.name}}
+            span.badge 
+              ' {{client.reminders.length}}
+
+  form#new_client(ng-submit="createClient(clientName)")
+    .input-group
+      input#clientDescription.form-control.input-lg(type="text" autofocus="autofocus" placeholder="Client name" maxlength="255" ng-model="clientName" data-non-blank)
+      span.input-group-btn
+        button.btn.btn-primary.btn-lg(type="submit") create client
